@@ -189,7 +189,7 @@ export default Router.extend({
   handleIdxInteractionCanceled() {
     // Restart login flow
     this.settings.set('useInteractionCodeFlow', true);
-    startLoginFlow(this.options.settings)
+    startLoginFlow(this.settings)
       .then(idxResp => {
         this.appState.trigger('remediationSuccess', idxResp);
       })

@@ -16,7 +16,7 @@ import { getV1ClassName } from '../ion/ViewClassNamesFactory';
 import { FORMS, TERMINAL_FORMS, FORM_NAME_TO_OPERATION_MAP } from '../ion/RemediationConstants';
 import Util from '../../util/Util';
 import sessionStorageHelper from '../client/sessionStorageHelper';
-import { clearTransactionMeta, startLoginFlow } from '../client';
+import { clearTransactionMeta } from '../client';
 
 export default Controller.extend({
   className: 'form-controller',
@@ -132,8 +132,13 @@ export default Controller.extend({
 
   handleInvokeAction(actionPath = '') {
     const idx = this.options.appState.get('idx');
+    let useInteractionCodeFlow;
 
     if (actionPath === 'cancel') {
+      const authClient = this.options.settings.getAuthClient();
+      const transactionMeta = authClient.transactionManager.load();
+      useInteractionCodeFlow = !!transactionMeta?.interactionHandle;
+
       clearTransactionMeta(this.options.settings);
       sessionStorageHelper.removeStateHandle();
       this.options.appState.clearAppStateCache();
@@ -158,7 +163,7 @@ export default Controller.extend({
           this.showFormErrors(this.formView.model, error);
         })
         .then(() => {
-          if (actionPath === 'cancel') {
+          if (actionPath === 'cancel' && useInteractionCodeFlow) {
             this.options.appState.trigger('interactionCanceled');
           }
         });
