@@ -164,6 +164,7 @@ export default Controller.extend({
         })
         .then(() => {
           if (actionPath === 'cancel' && useInteractionCodeFlow) {
+            this.options.settings.set('useInteractionCodeFlow', true);
             this.options.appState.trigger('interactionCanceled');
           }
         });

@@ -80,7 +80,7 @@ export default Router.extend({
     configIdxJsClient(this.appState);
     this.listenTo(this.appState, 'remediationSuccess', this.handleIdxResponseSuccess);
     this.listenTo(this.appState, 'remediationError', this.handleIdxResponseFailure);
-    this.listenTo(this.appState, 'interactionCanceled', this.handleIdxInteractionCanceled);
+    this.listenTo(this.appState, 'interactionCanceled', this.startLoginFlow);
   },
 
   handleIdxResponseSuccess(idxResponse) {
@@ -186,14 +186,18 @@ export default Router.extend({
     // }
   },
 
-  handleIdxInteractionCanceled() {
-    // Restart login flow
-    this.settings.set('useInteractionCodeFlow', true);
-    startLoginFlow(this.settings)
+  startLoginFlow() {
+    return startLoginFlow(this.settings)
       .then(idxResp => {
+        this.settings.unset('stateToken');
+        this.settings.unset('proxyIdxResponse');
+        this.settings.unset('useInteractionCodeFlow');
         this.appState.trigger('remediationSuccess', idxResp);
       })
       .catch(errorResp => {
+        this.settings.unset('stateToken');
+        this.settings.unset('proxyIdxResponse');
+        this.settings.unset('useInteractionCodeFlow');
         this.appState.trigger('remediationError', errorResp.error || errorResp);
       });
   },
@@ -224,19 +228,8 @@ export default Router.extend({
     // and remove it from `settings` afterwards as IDX response always has
     // state token (which will be set into AppState)
     if (this.settings.get('oieEnabled')) {
-      return startLoginFlow(this.settings)
-        .then(idxResp => {
-          this.settings.unset('stateToken');
-          this.settings.unset('proxyIdxResponse');
-          this.settings.unset('useInteractionCodeFlow');
-          this.appState.trigger('remediationSuccess', idxResp);
-          this.render(Controller, options);
-        })
-        .catch(errorResp => {
-          this.settings.unset('stateToken');
-          this.settings.unset('proxyIdxResponse');
-          this.settings.unset('useInteractionCodeFlow');
-          this.appState.trigger('remediationError', errorResp.error || errorResp);
+      return this.startLoginFlow(this.settings)
+        .then(() => {
           this.render(Controller, options);
         });
     }
