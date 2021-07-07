@@ -159,15 +159,7 @@ export default Controller.extend({
         })
         .then(() => {
           if (actionPath === 'cancel') {
-            // Restart login flow
-            this.settings.set('useInteractionCodeFlow', true);
-            startLoginFlow(this.options.settings)
-              .then(idxResp => {
-                this.handleIdxSuccess(idxResp);
-              })
-              .catch(err => {
-                this.showFormErrors(this.formView.model, err);
-              });
+            this.options.appState.trigger('interactionCanceled');
           }
         });
     } else {

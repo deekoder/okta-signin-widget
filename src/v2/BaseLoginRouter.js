@@ -80,6 +80,7 @@ export default Router.extend({
     configIdxJsClient(this.appState);
     this.listenTo(this.appState, 'remediationSuccess', this.handleIdxResponseSuccess);
     this.listenTo(this.appState, 'remediationError', this.handleIdxResponseFailure);
+    this.listenTo(this.appState, 'interactionCanceled', this.handleIdxInteractionCanceled);
   },
 
   handleIdxResponseSuccess(idxResponse) {
@@ -183,6 +184,18 @@ export default Router.extend({
     //   this.settings.callGlobalError(new Errors.UnsupportedBrowserError(loc('error.enabled.cors')));
     //   return;
     // }
+  },
+
+  handleIdxInteractionCanceled() {
+    // Restart login flow
+    this.settings.set('useInteractionCodeFlow', true);
+    startLoginFlow(this.options.settings)
+      .then(idxResp => {
+        this.appState.trigger('remediationSuccess', idxResp);
+      })
+      .catch(errorResp => {
+        this.appState.trigger('remediationError', errorResp.error || errorResp);
+      });
   },
 
   render: function(Controller, options = {}) {
