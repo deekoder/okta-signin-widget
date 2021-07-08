@@ -80,7 +80,7 @@ export default Router.extend({
     configIdxJsClient(this.appState);
     this.listenTo(this.appState, 'remediationSuccess', this.handleIdxResponseSuccess);
     this.listenTo(this.appState, 'remediationError', this.handleIdxResponseFailure);
-    this.listenTo(this.appState, 'interactionCanceled', this.startLoginFlow);
+    this.listenTo(this.appState, 'interactionCanceled', this.render);
   },
 
   handleIdxResponseSuccess(idxResponse) {
@@ -186,22 +186,6 @@ export default Router.extend({
     // }
   },
 
-  startLoginFlow() {
-    return startLoginFlow(this.settings)
-      .then(idxResp => {
-        this.settings.unset('stateToken');
-        this.settings.unset('proxyIdxResponse');
-        this.settings.unset('useInteractionCodeFlow');
-        this.appState.trigger('remediationSuccess', idxResp);
-      })
-      .catch(errorResp => {
-        this.settings.unset('stateToken');
-        this.settings.unset('proxyIdxResponse');
-        this.settings.unset('useInteractionCodeFlow');
-        this.appState.trigger('remediationError', errorResp.error || errorResp);
-      });
-  },
-
   render: function(Controller, options = {}) {
     // If url changes then widget assumes that user's intention was to initiate a new login flow,
     // so clear stored token to use the latest token.
@@ -228,8 +212,19 @@ export default Router.extend({
     // and remove it from `settings` afterwards as IDX response always has
     // state token (which will be set into AppState)
     if (this.settings.get('oieEnabled')) {
-      return this.startLoginFlow(this.settings)
-        .then(() => {
+      return startLoginFlow(this.settings)
+        .then(idxResp => {
+          this.settings.unset('stateToken');
+          this.settings.unset('proxyIdxResponse');
+          this.settings.unset('useInteractionCodeFlow');
+          this.appState.trigger('remediationSuccess', idxResp);
+          this.render(Controller, options);
+        })
+        .catch(errorResp => {
+          this.settings.unset('stateToken');
+          this.settings.unset('proxyIdxResponse');
+          this.settings.unset('useInteractionCodeFlow');
+          this.appState.trigger('remediationError', errorResp.error || errorResp);
           this.render(Controller, options);
         });
     }
@@ -244,17 +239,20 @@ export default Router.extend({
     }
 
     // render Controller
-    this.unload();
-    const controllerOptions = _.extend({
-      el: this.el,
-      settings: this.settings,
-      appState: this.appState
-    }, options);
-    this.controller = new Controller(controllerOptions);
+    if (Controller) {
+      this.unload();
 
-    // Bubble up all controller events
-    this.listenTo(this.controller, 'all', this.trigger);
+      const controllerOptions = _.extend({
+        el: this.el,
+        settings: this.settings,
+        appState: this.appState
+      }, options);
+      this.controller = new Controller(controllerOptions);
 
+      // Bubble up all controller events
+      this.listenTo(this.controller, 'all', this.trigger);
+    }
+    
     this.controller.render();
   },
 
