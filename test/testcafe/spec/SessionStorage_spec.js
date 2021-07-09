@@ -281,9 +281,6 @@ test.requestHooks(identifyChallengeMock)('shall back to sign-in and authenticate
   const optionsForInteractionCodeFlow = {
     clientId: 'fake',
     useInteractionCodeFlow: true,
-    codeVerifier: 'fake',
-    codeChallenge: 'totally_fake',
-    codeChallengeMethod: 'S256',
     authParams: {
       ignoreSignature: true,
       pkce: true,
