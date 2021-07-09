@@ -166,7 +166,7 @@ export default Controller.extend({
           if (actionPath === 'cancel' && useInteractionCodeFlow) {
             // TODO: remove this line after OKTA-405474
             this.options.settings.set('useInteractionCodeFlow', true);
-            this.options.appState.trigger('interactionCanceled');
+            this.options.appState.trigger('interactionCanceled', this.constructor);
           }
         });
     } else {

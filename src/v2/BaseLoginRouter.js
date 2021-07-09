@@ -241,19 +241,17 @@ export default Router.extend({
     }
 
     // render Controller
-    if (Controller) {
-      this.unload();
+    this.unload();
 
-      const controllerOptions = _.extend({
-        el: this.el,
-        settings: this.settings,
-        appState: this.appState
-      }, options);
-      this.controller = new Controller(controllerOptions);
+    const controllerOptions = _.extend({
+      el: this.el,
+      settings: this.settings,
+      appState: this.appState
+    }, options);
+    this.controller = new Controller(controllerOptions);
 
-      // Bubble up all controller events
-      this.listenTo(this.controller, 'all', this.trigger);
-    }
+    // Bubble up all controller events
+    this.listenTo(this.controller, 'all', this.trigger);
     
     this.controller.render();
   },
