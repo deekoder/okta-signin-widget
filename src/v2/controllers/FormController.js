@@ -158,16 +158,17 @@ export default Controller.extend({
     if (_.isFunction(actionFn)) {
       // TODO: OKTA-243167 what's the approach to show spinner indicating API in flight?
       actionFn()
-        .then(this.handleIdxSuccess.bind(this))
-        .catch(error => {
-          this.showFormErrors(this.formView.model, error);
-        })
         .then(() => {
           if (actionPath === 'cancel' && useInteractionCodeFlow) {
             // TODO: remove this line after OKTA-405474
             this.options.settings.set('useInteractionCodeFlow', true);
             this.options.appState.trigger('interactionCanceled', this.constructor);
+          } else {
+            this.handleIdxSuccess();
           }
+        })
+        .catch(error => {
+          this.showFormErrors(this.formView.model, error);
         });
     } else {
       this.options.settings.callGlobalError(`Invalid action selected: ${actionPath}`);
