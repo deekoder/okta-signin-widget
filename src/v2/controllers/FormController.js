@@ -132,6 +132,7 @@ export default Controller.extend({
 
   handleInvokeAction(actionPath = '') {
     const idx = this.options.appState.get('idx');
+    const usedInteractionCodeFlow = useInteractionCodeFlow(this.options.settings);
 
     if (actionPath === 'cancel') {
       clearTransactionMeta(this.options.settings);
@@ -154,7 +155,7 @@ export default Controller.extend({
       // TODO: OKTA-243167 what's the approach to show spinner indicating API in flight?
       actionFn()
         .then(() => {
-          if (actionPath === 'cancel' && useInteractionCodeFlow(this.options.settings)) {
+          if (actionPath === 'cancel' && usedInteractionCodeFlow) {
             // TODO: remove this line after OKTA-405474
             this.options.settings.set('useInteractionCodeFlow', true);
             this.options.appState.trigger('interactionCanceled', this.constructor);
