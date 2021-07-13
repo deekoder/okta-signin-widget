@@ -54,6 +54,12 @@ export async function getTransactionMeta(settings) {
   return meta;
 }
 
+export function useInteractionCodeFlow(settings) {
+  const authClient = settings.getAuthClient();
+  const transactionMeta = authClient.transactionManager.load();
+  return !!transactionMeta?.interactionHandle;
+}
+
 export function saveTransactionMeta(settings, meta) {
   const authClient = settings.getAuthClient();
   authClient.transactionManager.save(meta);
