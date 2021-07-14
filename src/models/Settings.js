@@ -530,5 +530,4 @@ export default Model.extend({
   isDsTheme: function() {
     return false;
   },
-
 });
