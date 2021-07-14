@@ -24,6 +24,9 @@ export async function checkConsoleMessages(context = {}) {
     case 'afterRender':
       await t.expect(log[i]).eql('===== playground widget afterRender event received =====');
       break;
+    case 'success':
+      await t.expect(log[i]).eql('===== playground widget success ===== [object Object]');
+      break;
     default:
       await t.expect(JSON.parse(log[i])).eql(context[i]);
     }

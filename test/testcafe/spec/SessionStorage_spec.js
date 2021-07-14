@@ -12,7 +12,7 @@ import BasePageObject from '../framework/page-objects/BasePageObject';
 import IdentityPageObject from '../framework/page-objects/IdentityPageObject';
 import SuccessPageObject from '../framework/page-objects/SuccessPageObject';
 import TerminalPageObject from '../framework/page-objects/TerminalPageObject';
-import { getStateHandleFromSessionStorage, renderWidget } from '../framework/shared';
+import { getStateHandleFromSessionStorage, renderWidget, checkConsoleMessages } from '../framework/shared';
 
 const identifyChallengeMock = RequestMock()
   .onRequestTo('http://localhost:3000/idp/idx/introspect')
@@ -314,8 +314,37 @@ test.requestHooks(identifyChallengeMock)('shall back to sign-in and authenticate
   await challengeEmailPageObject.clickNextButton();
   
   // Check success
-  const history = await t.getNativeDialogHistory();
-  await t
-    .expect(history.length).eql(1)
-    .expect(history[0].text).eql('SUCCESS: OIDC with single responseType. Check Console');
+  await checkConsoleMessages([
+    'ready',
+    'afterRender',
+    {
+      controller: 'primary-auth',
+      formName: 'identify'
+    },
+    'afterRender',
+    {
+      controller: 'mfa-verify-passcode',
+      formName: 'challenge-authenticator',
+      authenticatorKey: 'okta_email',
+      methodType: 'email'
+    },
+    'afterRender',
+    {
+      controller: 'primary-auth',
+      formName: 'identify'
+    },
+    'afterRender',
+    {
+      controller: 'primary-auth',
+      formName: 'identify'
+    },
+    'afterRender',
+    {
+      controller: 'mfa-verify-passcode',
+      formName: 'challenge-authenticator',
+      authenticatorKey: 'okta_email',
+      methodType: 'email'
+    },
+    'success'
+  ]);
 });
