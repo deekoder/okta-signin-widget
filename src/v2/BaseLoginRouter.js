@@ -257,7 +257,7 @@ export default Router.extend({
   },
 
   handleInteractionCanceled() {
-    this.render(this.conntroller.constructor);
+    this.render(this.controller.constructor);
   },
 
   start: function() {
