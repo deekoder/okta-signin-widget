@@ -98,7 +98,6 @@ export function isTransactionMetaValid(settings, meta) {
 }
 
 export function isInteractionCodeFlow(settings) {
-  const authClient = settings.getAuthClient();
-  const transactionMeta = authClient.transactionManager.load();
+  const transactionMeta = getTransactionMeta(settings);
   return !!transactionMeta?.interactionHandle;
 }
