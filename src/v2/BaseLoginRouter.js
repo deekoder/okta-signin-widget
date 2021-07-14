@@ -252,7 +252,7 @@ export default Router.extend({
 
     // Bubble up all controller events
     this.listenTo(this.controller, 'all', this.trigger);
-    
+
     this.controller.render();
   },
 

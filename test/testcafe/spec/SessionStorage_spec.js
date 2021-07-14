@@ -156,7 +156,7 @@ test.requestHooks(identifyChallengeMock)('shall clear session.stateHandle when c
 
   // Go back to Identify page after sign-out
   await t.expect(identityPage.form.getTitle()).eql('Sign In');
-  await t.expect(getStateHandleFromSessionStorage()).notEql(xhrEmailVerification.stateHandle);
+  await t.expect(getStateHandleFromSessionStorage()).eql(null);
 });
 
 test.requestHooks(identifyChallengeMock)('shall clear when session.stateHandle is invalid', async t => {
