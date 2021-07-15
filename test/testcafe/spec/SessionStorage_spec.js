@@ -4,7 +4,7 @@ import xhrSessionExpried from '../../../playground/mocks/data/idp/idx/error-sess
 import xhrIdentify from '../../../playground/mocks/data/idp/idx/identify';
 import xhrSuccess from '../../../playground/mocks/data/idp/idx/success';
 import xhrSuccessWithInteractionCode from '../../../playground/mocks/data/idp/idx/success-with-interaction-code';
-import xhrSuccessTokens from '../../../playground/mocks/data/oauth2/success-tokens.json';
+import xhrSuccessTokens from '../../../playground/mocks/data/oauth2/success-tokens';
 import xhrMagicLinkExpired from '../../../playground/mocks/data/idp/idx/terminal-return-expired-email';
 import xhrIdentifyWithNoAppleCredentialSSOExtension from '../../../playground/mocks/data/idp/idx/identify-with-no-sso-extension';
 import ChallengeEmailPageObject from '../framework/page-objects/ChallengeEmailPageObject';
@@ -264,7 +264,7 @@ test.requestHooks(credentialSSONotExistLogger, credentialSSONotExistMock)('shall
   await t.expect(getStateHandleFromSessionStorage()).eql(null);
 });
 
-test.requestHooks(identifyChallengeMock)('shall back to sign-in and authenticate succesfully', async t => {
+test.requestHooks(identifyChallengeMock)('shall back to sign-in and authenticate successfully', async t => {
   const identityPage = new IdentityPageObject(t);
   const challengeEmailPageObject = new ChallengeEmailPageObject(t);
   let pageTitle;
