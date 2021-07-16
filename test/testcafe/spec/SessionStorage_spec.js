@@ -345,6 +345,10 @@ test.requestHooks(identifyChallengeMock)('shall back to sign-in and authenticate
       authenticatorKey: 'okta_email',
       methodType: 'email'
     },
-    'success'
+    {
+      status: 'SUCCESS',
+      accessToken: xhrSuccessTokens.access_token,
+      idToken: xhrSuccessTokens.id_token
+    }
   ]);
 });
