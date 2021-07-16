@@ -24,7 +24,8 @@ export async function checkConsoleMessages(context = {}) {
     case 'afterRender':
       await t.expect(log[i]).eql('===== playground widget afterRender event received =====');
       break;
-    default:
+    default: {
+      /* eslint max-depth: [2, 3] */
       const parsedLog = JSON.parse(log[i]);
       if (context[i].status === 'SUCCESS') {
         await t.expect(parsedLog.status).eql('SUCCESS');
@@ -33,6 +34,7 @@ export async function checkConsoleMessages(context = {}) {
       } else {
         await t.expect(parsedLog).eql(context[i]);
       }
+    }
     }
   }
 }
