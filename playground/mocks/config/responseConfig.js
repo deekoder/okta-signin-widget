@@ -14,7 +14,8 @@ const idx = {
   ],
 
   '/idp/idx/introspect': [
-    'identify',
+    'authenticator-verification-custom-app-push',
+    //'identify',
     // 'error-401-invalid-otp-passcode',
     // 'error-with-failure-redirect',
     // 'error-feature-not-enabled',
@@ -44,7 +45,7 @@ const idx = {
     // 'authenticator-verification-phone-sms',
     // 'authenticator-verification-phone-voice',
     // 'authenticator-verification-security-question',
-    // 'authenticator-verification-select-authenticator',
+    //'authenticator-verification-select-authenticator',
     // 'authenticator-verification-select-authenticator-ov-m2',
     // 'authenticator-verification-webauthn',
     // 'authenticator-reset-password',
@@ -97,7 +98,8 @@ const idx = {
     'error-authenticator-enroll-phone-invalid-number',
   ],
   '/idp/idx/identify': [
-    'authenticator-enroll-select-authenticator',
+    'authenticator-verification-custom-app-push'
+    //'authenticator-enroll-select-authenticator',
     // 'identify-with-only-one-third-party-idp',
     // 'error-identify-access-denied',
     // 'error-identify-user-locked-unable-challenge',
@@ -132,6 +134,8 @@ const idx = {
     // 'authenticator-verification-phone-voice'
   ],
   '/idp/idx/challenge/poll': [
+    'authenticator-verification-custom-app-push-reject',
+    'authenticator-verification-custom-app-push',
     'success',
     // 'authenticator-verification-email-polling-long',
     // 'error-429-too-many-request',
@@ -141,13 +145,14 @@ const idx = {
     // 'authenticator-verification-okta-verify-push',
   ],
   '/idp/idx/challenge': [
+    'authenticator-verification-custom-app-push',
     // 'authenticator-verification-webauthn',
     // 'authenticator-verification-password',
     // 'authenticator-verification-okta-verify-totp',
     // 'authenticator-verification-okta-verify-push',
     // 'authenticator-verification-google-authenticator',
-    'error-authenticator-phone-sms-ratelimit',
-    'error-authenticator-phone-voice-ratelimit',
+    // 'error-authenticator-phone-sms-ratelimit',
+    // 'error-authenticator-phone-voice-ratelimit',
   ],
   '/idp/idx/enroll/new': [
     'error-new-signup-email',
